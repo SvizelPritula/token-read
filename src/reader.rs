@@ -76,7 +76,7 @@ impl<R: BufRead> TokenReader<R> {
 impl<R: Read> TokenReader<BufReader<R>> {
     /// Creates a [`TokenReader`] from a type that implements [`Read`].
     /// 
-    /// This method works by wrapping the reader with [`BufReader`].
+    /// This is a convenience method for wrapping the reader with [`BufReader`].
     pub fn from_read(read: R) -> Self {
         TokenReader {
             lines: BufReader::new(read).lines(),
