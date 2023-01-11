@@ -36,7 +36,10 @@ macro_rules! impl_tuple {
 
         #[derive(Error, Debug)]
         pub enum $error_name<$($error_type),*> {
-            $($error_variant { source: $error_type },)*
+            $(
+                #[error(transparent)]
+                $error_variant { source: $error_type },
+            )*
         }
     };
 }

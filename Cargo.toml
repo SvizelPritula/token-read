@@ -6,6 +6,8 @@ edition = "2021"
 build = "build.rs"
 
 [dependencies]
-anyhow = "1.0.68"
 arrayvec = "0.7.2"
 thiserror = "1.0.38"
+
+[dev-dependencies]
+anyhow = "1.0.68"

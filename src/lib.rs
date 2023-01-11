@@ -1,8 +1,8 @@
 mod error;
-mod impls;
+pub mod impls;
 mod reader;
 
-pub use error::{TokenReadError, TokenPatternParseError};
+pub use error::{TokenPatternParseError, TokenReadError};
 pub use reader::TokenReader;
 
 pub trait FromTokens: Sized {

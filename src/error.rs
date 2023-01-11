@@ -1,5 +1,23 @@
-use std::io::Error;
+use std::io;
 use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum TokenReadError<E> {
+    #[error("input error")]
+    IoError { source: io::Error },
+    #[error("unexpected end of file")]
+    EndOfFile,
+    #[error("failed to parse tokens")]
+    ParseError { source: E },
+}
+
+#[derive(Error, Debug)]
+pub enum ReadLineError {
+    #[error("input error")]
+    IoError { source: io::Error },
+    #[error("unexpected end of file")]
+    EndOfFile
+}
 
 #[derive(Error, Debug)]
 pub enum TokenPatternParseError<E> {
@@ -11,12 +29,11 @@ pub enum TokenPatternParseError<E> {
     TooFewTokens { real: usize, expected: usize },
 }
 
-#[derive(Error, Debug)]
-pub enum TokenReadError<E> {
-    #[error("input error")]
-    IoError { source: Error },
-    #[error("unexpected end of file")]
-    EndOfFile,
-    #[error("failed to parse tokens")]
-    ParseError { source: E },
+impl<E> From<ReadLineError> for TokenReadError<E> {
+    fn from(value: ReadLineError) -> Self {
+        match value {
+            ReadLineError::IoError { source } => TokenReadError::IoError { source },
+            ReadLineError::EndOfFile => TokenReadError::EndOfFile,
+        }
+    }
 }
