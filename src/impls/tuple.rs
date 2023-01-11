@@ -34,7 +34,7 @@ macro_rules! impl_tuple {
             }
         }
 
-        /// An error that occured when parsing a token to form a tuple
+        /// This enum combines all errors that can occur when parsing an tuple
         #[derive(Error, Debug)]
         pub enum $error_name<$($error_type),*> {
             $(
