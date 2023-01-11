@@ -1,0 +1,11 @@
+[package]
+name = "token-read"
+version = "0.1.0"
+edition = "2021"
+
+build = "build.rs"
+
+[dependencies]
+anyhow = "1.0.68"
+arrayvec = "0.7.2"
+thiserror = "1.0.38"
