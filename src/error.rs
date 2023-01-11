@@ -6,7 +6,7 @@ use crate::reader::TokenReader;
 
 /// An error returned from [`TokenReader::line`].
 #[derive(Error, Debug)]
-pub enum TokenReadError<E> {
+pub enum ReadTokensError<E> {
     #[error("input error")]
     IoError { source: io::Error },
     #[error("unexpected end of file")]
@@ -31,7 +31,7 @@ pub enum ReadLineError {
 /// * There are too many or to few token
 /// * Any of the tokens fail to parse 
 #[derive(Error, Debug)]
-pub enum TokenPatternParseError<E> {
+pub enum ParseTokenPatternError<E> {
     #[error("failed to parse token")]
     ParseError { source: E },
     #[error("got more than {expected} tokens")]
@@ -40,11 +40,11 @@ pub enum TokenPatternParseError<E> {
     TooFewTokens { real: usize, expected: usize },
 }
 
-impl<E> From<ReadLineError> for TokenReadError<E> {
+impl<E> From<ReadLineError> for ReadTokensError<E> {
     fn from(value: ReadLineError) -> Self {
         match value {
-            ReadLineError::IoError { source } => TokenReadError::IoError { source },
-            ReadLineError::EndOfFile => TokenReadError::EndOfFile,
+            ReadLineError::IoError { source } => ReadTokensError::IoError { source },
+            ReadLineError::EndOfFile => ReadTokensError::EndOfFile,
         }
     }
 }

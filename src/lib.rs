@@ -37,7 +37,7 @@ mod error;
 pub mod impls;
 mod reader;
 
-pub use error::{ReadLineError, TokenPatternParseError, TokenReadError};
+pub use error::{ReadLineError, ParseTokenPatternError, ReadTokensError};
 pub use reader::TokenReader;
 
 #[cfg(doc)]

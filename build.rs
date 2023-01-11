@@ -7,7 +7,7 @@ use std::{
 
 fn generate_impl_tuple_calls<W: Write>(mut w: W) -> Result<(), Error> {
     for variant in 0..=16 {
-        writeln!(w, "impl_tuple!({v}, Tuple{v}ParseError;", v = variant)?;
+        writeln!(w, "impl_tuple!({v}, ParseTuple{v}Error;", v = variant)?;
 
         for field in 0..variant {
             writeln!(w, "\t{f}, T{f}, f{f}, E{f}, Field{f};", f = field)?;

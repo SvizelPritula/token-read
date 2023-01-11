@@ -1,6 +1,6 @@
 use std::io::{BufRead, BufReader, Lines, Read};
 
-use crate::{error::ReadLineError, FromTokens, TokenReadError};
+use crate::{error::ReadLineError, FromTokens, ReadTokensError};
 
 #[cfg(doc)]
 use std::io::Stdin;
@@ -53,14 +53,14 @@ impl<R: BufRead> TokenReader<R> {
 
 
     /// Reads and parse a single line of whitespace delimited tokens.
-    pub fn line<T>(&mut self) -> Result<T, TokenReadError<T::Error>>
+    pub fn line<T>(&mut self) -> Result<T, ReadTokensError<T::Error>>
     where
         T: FromTokens,
     {
         let line = self.line_raw()?;
         let tokens = line.split_whitespace();
 
-        T::from_tokens(tokens).map_err(|source| TokenReadError::ParseError { source })
+        T::from_tokens(tokens).map_err(|source| ReadTokensError::ParseError { source })
     }
 
     /// Reads a single line, unmodified.
