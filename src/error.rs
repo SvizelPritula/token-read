@@ -1,6 +1,10 @@
 use std::io;
 use thiserror::Error;
 
+#[cfg(doc)]
+use crate::reader::TokenReader;
+
+/// An error returned from [`TokenReader::line`].
 #[derive(Error, Debug)]
 pub enum TokenReadError<E> {
     #[error("input error")]
@@ -11,6 +15,7 @@ pub enum TokenReadError<E> {
     ParseError { source: E },
 }
 
+/// An error returned from [`TokenReader::line_raw`].
 #[derive(Error, Debug)]
 pub enum ReadLineError {
     #[error("input error")]
@@ -19,6 +24,12 @@ pub enum ReadLineError {
     EndOfFile
 }
 
+/// An error returned when parsing a constant amount of tokens.
+/// 
+/// This error can be returned in two situations:
+/// 
+/// * There are too many or to few token
+/// * Any of the tokens fail to parse 
 #[derive(Error, Debug)]
 pub enum TokenPatternParseError<E> {
     #[error("failed to parse token")]
