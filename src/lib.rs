@@ -35,10 +35,11 @@
 
 mod error;
 pub mod impls;
-pub mod iter;
+mod iter;
 mod reader;
 
 pub use error::{ParseTokenPatternError, ReadLineError, ReadTokensError};
+pub use iter::Take;
 pub use reader::TokenReader;
 
 #[cfg(doc)]

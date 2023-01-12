@@ -1,5 +1,3 @@
-//! Iterators over input data
-
 use std::{io::BufRead, marker::PhantomData};
 
 use crate::{FromTokens, ReadTokensError, TokenReader};
