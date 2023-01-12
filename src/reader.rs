@@ -1,6 +1,6 @@
 use std::io::{BufRead, BufReader, Lines, Read};
 
-use crate::{error::ReadLineError, FromTokens, ReadTokensError};
+use crate::{error::ReadLineError, iter::Take, FromTokens, ReadTokensError};
 
 #[cfg(doc)]
 use std::io::Stdin;
@@ -51,7 +51,6 @@ impl<R: BufRead> TokenReader<R> {
         }
     }
 
-
     /// Reads and parse a single line of whitespace delimited tokens.
     pub fn line<T>(&mut self) -> Result<T, ReadTokensError<T::Error>>
     where
@@ -71,11 +70,18 @@ impl<R: BufRead> TokenReader<R> {
 
         Ok(line)
     }
+
+    pub fn take<'a, T>(&'a mut self, count: usize) -> Take<'a, T, R>
+    where
+        T: FromTokens,
+    {
+        Take::new(self, count)
+    }
 }
 
 impl<R: Read> TokenReader<BufReader<R>> {
     /// Creates a [`TokenReader`] from a type that implements [`Read`].
-    /// 
+    ///
     /// This is a convenience method for wrapping the reader with [`BufReader`].
     pub fn from_read(read: R) -> Self {
         TokenReader {

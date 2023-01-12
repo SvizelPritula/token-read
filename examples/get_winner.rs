@@ -10,8 +10,8 @@ fn main() -> Result<()> {
 
     let mut best = None;
 
-    for _ in 0..player_count {
-        let (name, points): (String, i64) = input.line()?;
+    for player in input.take(player_count) {
+        let (name, points): (String, i64) = player?;
 
         if let Some((_, best_points)) = best {
             if points <= best_points {

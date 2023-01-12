@@ -16,10 +16,10 @@
 //!
 //! ```no_run
 //! use std::io::stdin;
-//! 
+//!
 //! use anyhow::Result;
 //! use token_read::TokenReader;
-//! 
+//!
 //! fn main() -> Result<()> {
 //!     let mut input = TokenReader::new(stdin().lock());
 //!
@@ -28,16 +28,17 @@
 //!     let values: Vec<u64> = input.line()?; // Read an array of values
 //!     
 //!     // Do some processing
-//! 
+//!
 //!     Ok(())
 //! }
 //' ```
 
 mod error;
 pub mod impls;
+mod iter;
 mod reader;
 
-pub use error::{ReadLineError, ParseTokenPatternError, ReadTokensError};
+pub use error::{ParseTokenPatternError, ReadLineError, ReadTokensError};
 pub use reader::TokenReader;
 
 #[cfg(doc)]
