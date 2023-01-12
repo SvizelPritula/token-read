@@ -15,6 +15,7 @@ where
     R: BufRead,
     T: FromTokens,
 {
+    /// Creates a new [`Take`] iterator. It's recommended to use [`TokenReader::take`] instead.
     pub fn new(reader: &'a mut TokenReader<R>, count: usize) -> Self {
         Take {
             reader,
