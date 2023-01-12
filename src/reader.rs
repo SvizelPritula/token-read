@@ -13,9 +13,9 @@ pub struct TokenReader<R> {
 
 impl<R: BufRead> TokenReader<R> {
     /// Creates a [`TokenReader`] from a type that implements [`BufRead`], such as [`Stdin`].
-    pub fn new(read: R) -> Self {
+    pub fn new(buf_read: R) -> Self {
         TokenReader {
-            lines: read.lines(),
+            lines: buf_read.lines(),
         }
     }
 
@@ -119,6 +119,100 @@ impl<R: Read> TokenReader<BufReader<R>> {
     pub fn from_read(read: R) -> Self {
         TokenReader {
             lines: BufReader::new(read).lines(),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{ReadLineError, ReadTokensError, TokenReader};
+
+    #[test]
+    fn can_be_constructed_from_bufread() {
+        let mut input = TokenReader::new("Hello".as_bytes());
+        assert_eq!(input.line_raw().unwrap(), "Hello");
+    }
+
+    #[test]
+    fn can_be_constructed_from_read() {
+        let mut input = TokenReader::from_read("Hello".as_bytes());
+        assert_eq!(input.line_raw().unwrap(), "Hello");
+    }
+
+    #[test]
+    fn reads_raw_lines() {
+        let mut input = TokenReader::new("First\nSecond\n".as_bytes());
+        assert_eq!(input.line_raw().unwrap(), "First");
+        assert_eq!(input.line_raw().unwrap(), "Second");
+        assert!(matches!(input.line_raw(), Err(ReadLineError::EndOfFile)));
+    }
+
+    #[test]
+    fn reads_single_value() {
+        let mut input = TokenReader::new("13".as_bytes());
+        let value: Vec<i8> = input.line().unwrap();
+        assert_eq!(value, vec![13]);
+    }
+
+    #[test]
+    fn reads_multiple_values() {
+        let mut input = TokenReader::new("40 50 60".as_bytes());
+        let value: Vec<i8> = input.line().unwrap();
+        assert_eq!(value, vec![40, 50, 60]);
+    }
+
+    #[test]
+    fn reads_empty_values() {
+        let mut input = TokenReader::new(" ".as_bytes());
+        let value: Vec<i8> = input.line().unwrap();
+        assert_eq!(value, vec![]);
+    }
+
+    #[test]
+    fn ignores_multiple_whitespace_characters() {
+        let mut input = TokenReader::new("1\t\r    \t  7".as_bytes());
+        let value: Vec<i8> = input.line().unwrap();
+        assert_eq!(value, vec![1, 7]);
+    }
+
+    #[test]
+    fn ignores_start_and_end() {
+        let mut input = TokenReader::new(" \t123 \r".as_bytes());
+        let value: Vec<i8> = input.line().unwrap();
+        assert_eq!(value, vec![123]);
+    }
+
+    #[test]
+    fn returns_end_of_file() {
+        let mut input = TokenReader::new("5\n".as_bytes());
+
+        let _ = input.line::<Vec<i8>>().unwrap();
+        let result = input.line::<Vec<i8>>();
+
+        assert!(matches!(result, Err(ReadTokensError::EndOfFile)));
+    }
+
+    #[test]
+    fn returns_parse_error() {
+        let mut input = TokenReader::new("one\n".as_bytes());
+
+        let result = input.line::<Vec<i8>>();
+
+        match result {
+            Err(ReadTokensError::ParseError { source: _, line }) => {
+                assert_eq!(line, "one");
+            }
+            _ => panic!("expected error, got {result:?}"),
+        }
+    }
+
+    #[test]
+    fn take_gets_multiple_lines() {
+        let mut input = TokenReader::new("0\n1\n2\nx".as_bytes());
+
+        for (i, value) in input.take(3).enumerate() {
+            let (value,): (usize,) = value.unwrap();
+            assert_eq!(value, i);
         }
     }
 }
