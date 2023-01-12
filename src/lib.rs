@@ -35,7 +35,7 @@
 
 mod error;
 pub mod impls;
-mod iter;
+pub mod iter;
 mod reader;
 
 pub use error::{ParseTokenPatternError, ReadLineError, ReadTokensError};

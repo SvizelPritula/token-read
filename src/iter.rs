@@ -1,3 +1,5 @@
+//! Iterators over input data
+
 use std::{io::BufRead, marker::PhantomData};
 
 use crate::{FromTokens, ReadTokensError, TokenReader};
@@ -9,6 +11,7 @@ pub struct Take<'a, T, R> {
     _phantom: PhantomData<T>,
 }
 
+/// The iterator returned from [`TokenReader::take`].
 impl<'a, T, R> Take<'a, T, R>
 where
     R: BufRead,
