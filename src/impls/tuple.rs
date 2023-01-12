@@ -46,3 +46,63 @@ macro_rules! impl_tuple {
 }
 
 include!(concat!(env!("OUT_DIR"), "/tuple_calls.rs"));
+
+#[cfg(test)]
+mod tests {
+    use crate::{ParseTokenPatternError, ReadTokensError, TokenReader};
+
+    #[test]
+    fn reads_single_value() {
+        let mut input = TokenReader::new("true".as_bytes());
+        let (value,): (bool,) = input.line().unwrap();
+
+        assert_eq!(value, true);
+    }
+
+    #[test]
+    fn reads_multiple_values() {
+        let mut input = TokenReader::new("-1 2.5 test".as_bytes());
+        let (a, b, c): (i32, f64, String) = input.line().unwrap();
+
+        assert_eq!(a, -1);
+        assert_eq!(b, 2.5);
+        assert_eq!(c, "test");
+    }
+
+    #[test]
+    fn reads_empty_tuple() {
+        let mut input = TokenReader::new("\n".as_bytes());
+        let _: () = input.line().unwrap();
+    }
+
+    #[test]
+    fn returns_error_on_too_many_elements() {
+        let mut input = TokenReader::new("1 2 3".as_bytes());
+        let result = input.line::<(u8, u8)>();
+
+        assert!(matches!(
+            result,
+            Err(ReadTokensError::ParseError {
+                source: ParseTokenPatternError::TooManyTokens { expected: 2 },
+                ..
+            })
+        ));
+    }
+
+    #[test]
+    fn returns_error_on_too_few_elements() {
+        let mut input = TokenReader::new("10".as_bytes());
+        let result = input.line::<(u8, u8)>();
+
+        assert!(matches!(
+            result,
+            Err(ReadTokensError::ParseError {
+                source: ParseTokenPatternError::TooFewTokens {
+                    expected: 2,
+                    real: 1
+                },
+                ..
+            })
+        ));
+    }
+}

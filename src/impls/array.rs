@@ -32,3 +32,46 @@ where
             })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::{ParseTokenPatternError, ReadTokensError, TokenReader};
+
+    #[test]
+    fn reads_array() {
+        let mut input = TokenReader::new("10 11 12 13".as_bytes());
+        let value: [u8; 4] = input.line().unwrap();
+        assert_eq!(value, [10, 11, 12, 13]);
+    }
+
+    #[test]
+    fn returns_error_on_too_many_elements() {
+        let mut input = TokenReader::new("10 11 12 13 14".as_bytes());
+        let result = input.line::<[u8; 4]>();
+
+        assert!(matches!(
+            result,
+            Err(ReadTokensError::ParseError {
+                source: ParseTokenPatternError::TooManyTokens { expected: 4 },
+                ..
+            })
+        ));
+    }
+
+    #[test]
+    fn returns_error_on_too_few_elements() {
+        let mut input = TokenReader::new("10 11 12".as_bytes());
+        let result = input.line::<[u8; 4]>();
+
+        assert!(matches!(
+            result,
+            Err(ReadTokensError::ParseError {
+                source: ParseTokenPatternError::TooFewTokens {
+                    expected: 4,
+                    real: 3
+                },
+                ..
+            })
+        ));
+    }
+}
