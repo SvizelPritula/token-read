@@ -26,6 +26,7 @@
 //!     let (n,): (usize,) = input.line()?; // Read a single value
 //!     let (name, points): (String, u64) = input.line()?; // Read several values
 //!     let values: Vec<u64> = input.line()?; // Read an array of values
+//!     let tuples: Vec<(u32, f64)> = input.take(3).collect::<Result<_, _>>()?; // Read several lines of values
 //!     
 //!     // Do some processing
 //!
