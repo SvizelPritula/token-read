@@ -59,7 +59,7 @@ impl<R: BufRead> TokenReader<R> {
         let line = self.line_raw()?;
         let tokens = line.split_whitespace();
 
-        T::from_tokens(tokens).map_err(|source| ReadTokensError::ParseError { source })
+        T::from_tokens(tokens).map_err(|source| ReadTokensError::ParseError { source, line })
     }
 
     /// Reads a single line, unmodified.

@@ -11,8 +11,8 @@ pub enum ReadTokensError<E> {
     IoError { source: io::Error },
     #[error("unexpected end of file")]
     EndOfFile,
-    #[error("failed to parse tokens")]
-    ParseError { source: E },
+    #[error("failed to parse line of tokens: \"{line}\"")]
+    ParseError { source: E, line: String },
 }
 
 /// An error returned from [`TokenReader::line_raw`].
@@ -21,15 +21,15 @@ pub enum ReadLineError {
     #[error("input error")]
     IoError { source: io::Error },
     #[error("unexpected end of file")]
-    EndOfFile
+    EndOfFile,
 }
 
 /// An error returned when parsing a constant amount of tokens.
-/// 
+///
 /// This error can be returned in two situations:
-/// 
+///
 /// * There are too many or to few token
-/// * Any of the tokens fail to parse 
+/// * Any of the tokens fail to parse
 #[derive(Error, Debug)]
 pub enum ParseTokenPatternError<E> {
     #[error("failed to parse token")]
