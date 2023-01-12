@@ -5,6 +5,7 @@ use std::{
     path::Path,
 };
 
+// This could be probably done with a complex macro, but it's way easier this way.
 fn generate_impl_tuple_calls<W: Write>(mut w: W) -> Result<(), Error> {
     for variant in 0..=16 {
         writeln!(w, "impl_tuple!({v}, ParseTuple{v}Error;", v = variant)?;
