@@ -2,6 +2,7 @@ use std::{io::BufRead, marker::PhantomData};
 
 use crate::{FromTokens, ReadTokensError, TokenReader};
 
+/// An iterator returned from [`TokenReader::take`].
 #[derive(Debug)]
 pub struct Take<'a, T, R> {
     reader: &'a mut TokenReader<R>,
@@ -9,7 +10,6 @@ pub struct Take<'a, T, R> {
     _phantom: PhantomData<T>,
 }
 
-/// The iterator returned from [`TokenReader::take`].
 impl<'a, T, R> Take<'a, T, R>
 where
     R: BufRead,

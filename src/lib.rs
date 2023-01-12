@@ -1,6 +1,7 @@
-//! This crate provides for easy parsing of whitespace delimited files.
-//!
-//! It is primarily intended for competitive programming.
+//! This is a simple crate that allows for easy parsing of whitespace delimited files.
+//! 
+//! It is primarily intended for competitive programming, where such files are commonly used as
+//! inputs due to being easy to parse in C and C++. This crate aims to bring this ease to Rust.
 //!
 //! # Sample usage
 //!
