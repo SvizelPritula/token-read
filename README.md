@@ -110,5 +110,5 @@ Tokio 13960000
 This crate is [available from crates.io](https://crates.io/crates/token-read). To install, simply run:
 
 ```sh
-cargo add fingerprint-struct
+cargo add token-read
 ```
