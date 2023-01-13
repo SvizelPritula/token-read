@@ -5,18 +5,18 @@ use crate::FromTokens;
 /// A trait for types that can be used to create an iterator of tokens.
 ///
 /// It can be used to easily parse strings.
-pub trait AsTokens<'a> {
+pub trait ToTokens<'a> {
     type Iter: Iterator<Item = &'a str>;
 
     /// Creates an iterator of tokens contained in the type.
-    fn as_tokens(&'a self) -> Self::Iter;
+    fn to_tokens(&'a self) -> Self::Iter;
 
     /// Parses all tokens into an (usually inferred) type.
     ///
     /// # Example
     ///
     /// ```
-    /// # use token_read::AsTokens;
+    /// # use token_read::ToTokens;
     /// # use anyhow::Result;
     /// #
     /// # fn main() -> Result<()> {
@@ -32,26 +32,26 @@ pub trait AsTokens<'a> {
     where
         T: FromTokens,
     {
-        T::from_tokens(self.as_tokens())
+        T::from_tokens(self.to_tokens())
     }
 }
 
-impl<'a> AsTokens<'a> for str {
+impl<'a> ToTokens<'a> for str {
     type Iter = SplitWhitespace<'a>;
 
     /// Splits the string by any whitespace (including newlines).
-    fn as_tokens(&'a self) -> Self::Iter {
+    fn to_tokens(&'a self) -> Self::Iter {
         self.split_whitespace()
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::AsTokens;
+    use crate::ToTokens;
 
     #[test]
     fn splits_string_at_whitespace() {
-        let tokens = "0 1".as_tokens();
+        let tokens = "0 1".to_tokens();
         let tokens: Vec<&str> = tokens.collect();
         assert_eq!(tokens, vec!["0", "1"]);
     }
