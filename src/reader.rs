@@ -123,6 +123,18 @@ impl<R: Read> TokenReader<BufReader<R>> {
     }
 }
 
+impl<R> From<R> for TokenReader<R>
+where
+    R: BufRead,
+{
+    /// Wraps an implementation of [`BufRead`].
+    ///
+    /// Identical to [`TokenReader::new`].
+    fn from(value: R) -> Self {
+        TokenReader::new(value)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{ReadLineError, ReadTokensError, TokenReader};
@@ -136,6 +148,12 @@ mod tests {
     #[test]
     fn can_be_constructed_from_read() {
         let mut input = TokenReader::from_read("Hello".as_bytes());
+        assert_eq!(input.line_raw().unwrap(), "Hello");
+    }
+
+    #[test]
+    fn can_be_constructed_with_from() {
+        let mut input: TokenReader<_> = "Hello".as_bytes().into();
         assert_eq!(input.line_raw().unwrap(), "Hello");
     }
 
