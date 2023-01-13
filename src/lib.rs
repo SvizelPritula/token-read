@@ -1,5 +1,5 @@
 //! This is a simple crate that allows for easy parsing of whitespace delimited files.
-//! 
+//!
 //! It is primarily intended for competitive programming, where such files are commonly used as
 //! inputs due to being easy to parse in C and C++. This crate aims to bring this ease to Rust.
 //!
@@ -35,11 +35,13 @@
 //! }
 //' ```
 
+mod as_tokens;
 mod error;
 pub mod impls;
 mod iter;
 mod reader;
 
+pub use as_tokens::AsTokens;
 pub use error::{ParseTokenPatternError, ReadLineError, ReadTokensError};
 pub use iter::Take;
 pub use reader::TokenReader;
