@@ -2,11 +2,32 @@ use std::str::SplitWhitespace;
 
 use crate::FromTokens;
 
+/// A trait for types that can be used to create an iterator of tokens.
+///
+/// It can be used to easily parse strings.
 pub trait AsTokens<'a> {
     type Iter: Iterator<Item = &'a str>;
 
+    /// Creates an iterator of tokens contained in the type.
     fn as_tokens(&'a self) -> Self::Iter;
 
+    /// Parses all tokens into an (usually inferred) type.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use token_read::AsTokens;
+    /// # use anyhow::Result;
+    /// #
+    /// # fn main() -> Result<()> {
+    /// let (a, b): (u64, char) = "15 B".parse_tokens()?;
+    ///
+    /// assert_eq!(a, 15);
+    /// assert_eq!(b, 'B');
+    /// #
+    /// #   Ok(())
+    /// # }
+    /// ```
     fn parse_tokens<T>(&'a self) -> Result<T, T::Error>
     where
         T: FromTokens,
@@ -18,6 +39,7 @@ pub trait AsTokens<'a> {
 impl<'a> AsTokens<'a> for str {
     type Iter = SplitWhitespace<'a>;
 
+    /// Splits the string by any whitespace (including newlines).
     fn as_tokens(&'a self) -> Self::Iter {
         self.split_whitespace()
     }
