@@ -117,9 +117,7 @@ impl<R: Read> TokenReader<BufReader<R>> {
     ///
     /// This is a convenience method for wrapping the reader with [`BufReader`].
     pub fn from_read(read: R) -> Self {
-        TokenReader {
-            lines: BufReader::new(read).lines(),
-        }
+        TokenReader::new(BufReader::new(read))
     }
 }
 
