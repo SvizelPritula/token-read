@@ -56,7 +56,7 @@ mod tests {
         let mut input = TokenReader::new("true".as_bytes());
         let (value,): (bool,) = input.line().unwrap();
 
-        assert_eq!(value, true);
+        assert!(value);
     }
 
     #[test]

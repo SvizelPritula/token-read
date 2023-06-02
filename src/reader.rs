@@ -107,7 +107,7 @@ impl<R: BufRead> TokenReader<R> {
     /// #   Ok(())
     /// # }
     /// ```
-    pub fn take<'a, T>(&'a mut self, count: usize) -> Take<'a, T, R, usize>
+    pub fn take<T>(&mut self, count: usize) -> Take<'_, T, R, usize>
     where
         T: FromTokens,
     {
@@ -134,7 +134,7 @@ impl<R: BufRead> TokenReader<R> {
     /// #   Ok(())
     /// # }
     /// ```
-    pub fn take_count<'a, T, S>(&'a mut self, count: S) -> Take<'a, T, R, S>
+    pub fn take_count<T, S>(&mut self, count: S) -> Take<'_, T, R, S>
     where
         T: FromTokens,
         S: LineCount,
