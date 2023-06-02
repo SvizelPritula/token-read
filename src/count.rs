@@ -1,5 +1,5 @@
 /// A trait for various types than can represent a number of lines.
-/// 
+///
 /// Implementations are provided for all base unsigned integers.
 pub trait LineCount {
     /// Lower the number by one.

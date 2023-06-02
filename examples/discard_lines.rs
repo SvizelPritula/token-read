@@ -1,4 +1,4 @@
-use std::{io::stdin, collections::HashSet};
+use std::{collections::HashSet, io::stdin};
 
 use anyhow::Result;
 use token_read::TokenReader;
