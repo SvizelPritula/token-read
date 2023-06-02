@@ -114,7 +114,7 @@ impl<R: BufRead> TokenReader<R> {
         Take::new(self, count)
     }
 
-    /// Like [`TokenReader::take`], but can use non-[`usize`] counts
+    /// Like [`TokenReader::take`], but can use non-[`usize`] counts.
     ///
     /// This method can use any type implementing [`LineCount`] as the element count, like [`u32`].
     /// It can be used to process more than 2^32 lines on 32-bit systems.
