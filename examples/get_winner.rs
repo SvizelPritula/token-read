@@ -6,11 +6,11 @@ use token_read::TokenReader;
 fn main() -> Result<()> {
     let mut input = TokenReader::new(stdin().lock());
 
-    let (player_count,): (usize,) = input.line()?;
+    let (player_count,): (u64,) = input.line()?;
 
     let mut best = None;
 
-    for player in input.take(player_count) {
+    for player in input.take_count(player_count) {
         let (name, points): (String, i64) = player?;
 
         if let Some((_, best_points)) = best {

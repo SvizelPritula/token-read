@@ -35,16 +35,18 @@
 //! }
 //' ```
 
-mod to_tokens;
+mod count;
 mod error;
 pub mod impls;
 mod iter;
 mod reader;
+mod to_tokens;
 
-pub use to_tokens::ToTokens;
+pub use count::LineCount;
 pub use error::{ParseTokenPatternError, ReadLineError, ReadTokensError};
 pub use iter::Take;
 pub use reader::TokenReader;
+pub use to_tokens::ToTokens;
 
 #[cfg(doc)]
 use std::str::FromStr;

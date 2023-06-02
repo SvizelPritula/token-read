@@ -1,22 +1,23 @@
 use std::{io::BufRead, marker::PhantomData};
 
-use crate::{FromTokens, ReadTokensError, TokenReader};
+use crate::{FromTokens, LineCount, ReadTokensError, TokenReader};
 
 /// An iterator returned from [`TokenReader::take`].
 #[derive(Debug)]
-pub struct Take<'a, T, R> {
+pub struct Take<'a, T, R, S> {
     reader: &'a mut TokenReader<R>,
-    remaining: usize,
+    remaining: S,
     _phantom: PhantomData<T>,
 }
 
-impl<'a, T, R> Take<'a, T, R>
+impl<'a, T, R, S> Take<'a, T, R, S>
 where
     R: BufRead,
     T: FromTokens,
+    S: LineCount,
 {
     /// Creates a new [`Take`] iterator. It's recommended to use [`TokenReader::take`] instead.
-    pub fn new(reader: &'a mut TokenReader<R>, count: usize) -> Self {
+    pub fn new(reader: &'a mut TokenReader<R>, count: S) -> Self {
         Take {
             reader,
             remaining: count,
@@ -25,16 +26,17 @@ where
     }
 }
 
-impl<'a, T, R> Iterator for Take<'a, T, R>
+impl<'a, T, R, S> Iterator for Take<'a, T, R, S>
 where
     R: BufRead,
     T: FromTokens,
+    S: LineCount,
 {
     type Item = Result<T, ReadTokensError<T::Error>>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.remaining > 0 {
-            self.remaining -= 1;
+        if !self.remaining.empty() {
+            self.remaining.decrement();
 
             Some(self.reader.line())
         } else {

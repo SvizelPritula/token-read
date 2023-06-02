@@ -1,6 +1,6 @@
 use std::io::{BufRead, BufReader, Lines, Read};
 
-use crate::{error::ReadLineError, iter::Take, FromTokens, ReadTokensError};
+use crate::{FromTokens, LineCount, ReadLineError, ReadTokensError, Take};
 
 #[cfg(doc)]
 use std::io::Stdin;
@@ -19,7 +19,7 @@ impl<R: BufRead> TokenReader<R> {
         }
     }
 
-    /// Reads and parse a single line of whitespace delimited tokens.
+    /// Reads and parses a single line of whitespace delimited tokens.
     ///
     /// # Examples
     ///
@@ -89,6 +89,9 @@ impl<R: BufRead> TokenReader<R> {
 
     /// Creates an iterator that reads and parses a specific number of lines.
     ///
+    /// The line count must be an [`usize`].
+    /// You can also use [`TokenReader::take_count`], which allows other types.
+    ///
     /// # Example
     ///
     /// ```
@@ -104,9 +107,37 @@ impl<R: BufRead> TokenReader<R> {
     /// #   Ok(())
     /// # }
     /// ```
-    pub fn take<'a, T>(&'a mut self, count: usize) -> Take<'a, T, R>
+    pub fn take<'a, T>(&'a mut self, count: usize) -> Take<'a, T, R, usize>
     where
         T: FromTokens,
+    {
+        Take::new(self, count)
+    }
+
+    /// Like [`TokenReader::take`], but can use non-[`usize`] counts
+    ///
+    /// This method can use any type implementing [`LineCount`] as the element count, like [`u32`].
+    /// It can be used to process more than 2^32 lines on 32-bit systems.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use token_read::TokenReader;
+    /// # use anyhow::Result;
+    /// #
+    /// # fn main() -> Result<()> {
+    /// let mut input = TokenReader::new("1 a\n2 b\n3 c".as_bytes());
+    /// let lines: Vec<(u64, char)> = input.take_count(3u64).collect::<Result<_, _>>()?;
+    ///
+    /// assert_eq!(lines, vec![(1, 'a'), (2, 'b'), (3, 'c')]);
+    /// #
+    /// #   Ok(())
+    /// # }
+    /// ```
+    pub fn take_count<'a, T, S>(&'a mut self, count: S) -> Take<'a, T, R, S>
+    where
+        T: FromTokens,
+        S: LineCount,
     {
         Take::new(self, count)
     }
@@ -227,6 +258,16 @@ mod tests {
         let mut input = TokenReader::new("0\n1\n2\nx".as_bytes());
 
         for (i, value) in input.take(3).enumerate() {
+            let (value,): (usize,) = value.unwrap();
+            assert_eq!(value, i);
+        }
+    }
+
+    #[test]
+    fn take_count_gets_multiple_lines() {
+        let mut input = TokenReader::new("0\n1\n2\nx".as_bytes());
+
+        for (i, value) in input.take_count(3u64).enumerate() {
             let (value,): (usize,) = value.unwrap();
             assert_eq!(value, i);
         }
