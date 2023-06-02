@@ -96,6 +96,16 @@ let (city_count, ): (usize, ) = input.line()?;
 let cities: Vec<(String, u64)> = input.take(city_count).collect::<Result<_, _>>()?;
 ```
 
+In cases where the input doesn't need to be stored in memory, `take_count` can be used instead, as it allows larger line counts than fit in a `usize`:
+
+```rust
+let (city_count, ): (u64, ) = input.line()?;
+
+for city in input.take_count(city_count) {
+    let (name, population): (String, u64) = city?;
+}
+```
+
 #### Sample input
 
 ```

@@ -57,6 +57,7 @@ use std::str::FromStr;
 pub trait FromTokens: Sized {
     type Error;
 
+    /// Parses a value from an iterator of string tokens.
     fn from_tokens<'a, I>(tokens: I) -> Result<Self, Self::Error>
     where
         I: Iterator<Item = &'a str>;

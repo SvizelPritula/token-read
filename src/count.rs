@@ -1,5 +1,10 @@
+/// A trait for various types than can represent a number of lines.
+/// 
+/// Implementations are provided for all base unsigned integers.
 pub trait LineCount {
+    /// Lower the number by one.
     fn decrement(&mut self);
+    /// Check whether the number is equal to zero.
     fn empty(&self) -> bool;
 }
 
